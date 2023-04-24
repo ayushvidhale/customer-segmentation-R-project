@@ -1,0 +1,223 @@
+# Unsupervised Machine Learning
+# K-means Clustering.
+# 4 features and 400 data points
+
+
+library(plotrix)
+library(ggplot2)
+library(purrr)
+library(cluster)
+library(gridExtra)
+library(grid)
+library(NbClust)
+library(factoextra)
+
+customer_data=read.csv("C:/Users/offic/OneDrive/Desktop/customersegmentation/R/Mall_Customers.csv")
+str(customer_data)
+View(customer_data)
+
+names(customer_data)
+head(customer_data)
+
+summary(customer_data$Age)
+sd(customer_data$Age)
+summary(customer_data$Annual.Income..k..)
+sd(customer_data$Annual.Income..k..)
+summary(customer_data$Age)
+sd(customer_data$Spending.Score..1.100.)
+
+
+#Customer Gender Visualization
+
+a=table(customer_data$Gender)
+View(a)
+barplot(a,main="Using BarPlot to display Gender Comparision",
+        ylab="Count",
+        xlab="Gender",
+        col=rainbow(2),
+        legend=rownames(a))
+
+#
+# pct=round(a/sum(a)*100)
+# lbs=paste(c("Female","Male")," ",pct,"%",sep="")
+# lbs
+# pie3D(a,labels=lbs,main="Pie Chart Depicting Ratio of Female and Male")
+pct=round(a/sum(a)*100)
+lbs=paste(c("Female","Male")," ",pct,"%",sep="")
+lbs
+pie3D(a,labels=lbs,main="Pie Chart Depicting Ratio of Female and Male")
+
+#Visualization of Age Distribution
+
+
+summary(customer_data$Age)
+
+hist(customer_data$Age,
+     col="blue",
+     main="Histogram to Show Count of Age Class",
+     xlab="Age Class",
+     ylab="Frequency",
+     labels=TRUE)
+
+boxplot(customer_data$Age,
+        col="#ff0066",
+        main="Boxplot for Descriptive Analysis of Age")
+
+#Analysis of the Annual Income of the Customers
+
+summary(customer_data$Annual.Income..k..)
+hist(customer_data$Annual.Income..k..,
+     col="#660033",
+     main="Histogram for Annual Income",
+     xlab="Annual Income Class",
+     ylab="Frequency",
+     labels=TRUE)
+
+
+boxplot(customer_data$Spending.Score..1.100.,
+        horizontal=TRUE,
+        col="#990000",
+        main="BoxPlot for Descriptive Analysis of Spending Score")
+
+hist(customer_data$Spending.Score..1.100.,
+     main="HistoGram for Spending Score",
+     xlab="Spending Score Class",
+     ylab="Frequency",
+     col="#6600cc",
+     labels=TRUE)
+
+# Successfully Executed
+
+# **     K-means Algorithm      *****
+# In K-means, each cluster is represented by its center (called a “centroid”), which corresponds to the arithmetic mean
+# of data points assigned to the cluster.
+# A centroid is a data point that represents the center of the cluster (the mean), and it might not necessarily be a member of the dataset.
+
+
+set.seed(123)
+# It means that the random starting positions for the centroids will be the
+# same each time we run the k-means algorithm on the same data with the same value of k
+
+
+
+# function to calculate total intra-cluster sum of square
+iss <- function(k) {
+  kmeans(customer_data[,3:5],k,iter.max=100,nstart=100,algorithm="Lloyd" )$tot.withinss
+}
+
+k.values <- 1:10
+
+
+iss_values <- map_dbl(k.values, iss)
+
+plot(k.values, iss_values,
+     type="b", pch = 19, frame = FALSE,
+     xlab="Number of clusters K",
+     ylab="Total intra-clusters sum of squares")
+# Elbow  method to determine the number of clusters.
+
+
+
+
+#Average Silhouette Method --> The silhouette coefficient or silhouette score kmeans is a measure of how similar
+#                             a data point is within-cluster (cohesion) compared to other clusters (separation).
+
+# Lloyd's two-step implementation of the k-means algorithm allows to cluster data points into groups represented by a centroid.
+
+# iter. max is the number of times the algorithm will repeat the cluster assignment and moving of centroids.
+
+# nstart is the number of times the initial starting points are re-sampled.
+
+# In the code, it looks for the initial starting points that have the lowest within sum of squares (withinss).
+
+# Intra-cluster variance (a.k.a., the squared error function or sum of squares within (SSW) or sum of squares error (SSE)) is used
+# to quantify internal cohesion.
+
+# It is defined as the sum of the squared distance between the average point (called Centroid) and each point of the cluster.
+
+# Euclidean distance is a measure of the distance between two points in a multi-dimensional space.
+
+
+k2<-kmeans(customer_data[,3:5],2,iter.max=100,nstart=50,algorithm="Lloyd")
+# s2<-plot(silhouette(k2$cluster,dist(customer_data[,3:5],"euclidean")))
+
+k3<-kmeans(customer_data[,3:5],3,iter.max=100,nstart=50,algorithm="Lloyd")
+# s3<-plot(silhouette(k3$cluster,dist(customer_data[,3:5],"euclidean")))
+
+k4<-kmeans(customer_data[,3:5],4,iter.max=100,nstart=50,algorithm="Lloyd")
+# s4<-plot(silhouette(k4$cluster,dist(customer_data[,3:5],"euclidean")))
+
+k5<-kmeans(customer_data[,3:5],5,iter.max=100,nstart=50,algorithm="Lloyd")
+# s5<-plot(silhouette(k5$cluster,dist(customer_data[,3:5],"euclidean")))
+
+k6<-kmeans(customer_data[,3:5],6,iter.max=100,nstart=50,algorithm="Lloyd")
+# s6<-plot(silhouette(k6$cluster,dist(customer_data[,3:5],"euclidean")))
+
+k7<-kmeans(customer_data[,3:5],7,iter.max=100,nstart=50,algorithm="Lloyd")
+# s7<-plot(silhouette(k7$cluster,dist(customer_data[,3:5],"euclidean")))
+
+k8<-kmeans(customer_data[,3:5],8,iter.max=100,nstart=50,algorithm="Lloyd")
+# s8<-plot(silhouette(k8$cluster,dist(customer_data[,3:5],"euclidean")))
+
+k9<-kmeans(customer_data[,3:5],9,iter.max=100,nstart=50,algorithm="Lloyd")
+# s9<-plot(silhouette(k9$cluster,dist(customer_data[,3:5],"euclidean")))
+
+k10<-kmeans(customer_data[,3:5],10,iter.max=100,nstart=50,algorithm="Lloyd")
+# s10<-plot(silhouette(k10$cluster,dist(customer_data[,3:5],"euclidean")))
+
+
+
+
+
+# Successfully Executed
+
+
+k6<-kmeans(customer_data[,3:5],6,iter.max=100,nstart=50,algorithm="Lloyd")
+k6
+
+
+#Visualizing the Clustering Results using the First Two Principle Components
+
+pcclust=prcomp(customer_data[,3:5],scale=FALSE) #principal component analysis
+summary(pcclust)
+
+pcclust$rotation[,1:2]
+
+
+
+set.seed(1)
+ggplot(customer_data, aes(x =Annual.Income..k.., y = Spending.Score..1.100.)) +
+  geom_point(stat = "identity", aes(color = as.factor(k6$cluster))) +
+  scale_color_discrete(name=" ",
+                       breaks=c("1", "2", "3", "4", "5", "6"),
+                       labels=c("Cluster 1", "Cluster 2", "Cluster 3", "Cluster 4", "Cluster 5","Cluster 6")) +
+  ggtitle("Segments of Mall Customers", subtitle = "Using K-means Clustering")
+
+
+
+ggplot(customer_data, aes(x =Spending.Score..1.100., y =Age)) +
+  geom_point(stat = "identity", aes(color = as.factor(k6$cluster))) +
+  scale_color_discrete(name=" ",
+                       breaks=c("1", "2", "3", "4", "5","6"),
+                       labels=c("Cluster 1", "Cluster 2", "Cluster 3", "Cluster 4", "Cluster 5","Cluster 6")) +
+  ggtitle("Segments of Mall Customers", subtitle = "Using K-means Clustering")
+
+pct=round(a/sum(a)*100)
+lbs=paste(c("Female","Male")," ",pct,"%",sep="")
+lbs
+
+
+# y_kmeans <- k6$cluster
+# clusplot(customer_data[, c("Spending.Score..1.100.", "Age")],
+#          y_kmeans,
+#          lines = 0,
+#          shade = TRUE,
+#          color = TRUE,
+#          labels = 2,
+#          plotchar = FALSE,
+#          span = TRUE,
+#          main = paste("Mall Customers"),
+#          xlab = 'Spending.Score..1.100.',
+#          ylab = 'Age')
+
+#  File_1
